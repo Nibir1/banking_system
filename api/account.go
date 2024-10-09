@@ -8,7 +8,7 @@ import (
 	db "github.com/nibir1/banking_system/db/sqlc"
 )
 
-// create acccount functionalities for api
+// createAccount functionalities for api
 type createAccountRequest struct {
 	Owner    string `json:"owner" binding:"required"`
 	Currency string `json:"currency" binding:"required,oneof=USD EUR"`
