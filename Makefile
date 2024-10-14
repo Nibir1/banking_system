@@ -7,6 +7,8 @@ createdb:
 dropdb: 
 	docker exec -it postgres17.0 dropdb banking_systems
 
+# migrate create -ext sql -dir db/migration -seq add_users 
+
 migrateup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose up
 
