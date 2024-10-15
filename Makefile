@@ -12,6 +12,10 @@ dropdb:
 migrateup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose up
 
+# migrate database to aws postgres - banking_system
+migrateupAWS:
+	migrate -path db/migration -database "postgresql://root:8r0kp1amfO24wKJQW5O8@banking-system.c92a8wwkqopk.ap-south-1.rds.amazonaws.com:5432/banking_system" -verbose up
+
 migrateup1:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose up 1
 
@@ -51,5 +55,11 @@ dockerComposeUp:
 dockerComposeDown:
 	docker compose down
 
+# This command retrieves the secrets value from aws secret management and stores into app.env
+awsSecretsToappenv:
+	aws secretsmanager get-secret-value --secret-id banking_system --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
 
-.PHONY: postgres createdb dropdb migrateUp migratedown migrateUp1 migratedown1 sqlc test server mock dockerImageBuild dockerImageRun dockerComposeUp dockerComposeDown
+
+.PHONY: postgres createdb dropdb migrateUp migratedown migrateUp1 migratedown1 sqlc test server mock dockerImageBuild dockerImageRun dockerComposeUp dockerComposeDown migrateupAWS awsSecretsToappenv
+
+# openssl rand -hex 64 | head -c 32 == To generate random 32 TOKEN_SYMMETRIC_KEY
