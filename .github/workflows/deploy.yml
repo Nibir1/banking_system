@@ -1,4 +1,5 @@
 # This workflow will Deploy this golang project to aws ecr
+# Permission Policy - AmazonEC2ContainerRegistryFullAccess
 
 name: Deploy to production
 
