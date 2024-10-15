@@ -59,14 +59,15 @@ dockerComposeDown:
 awsSecretsToappenv:
 	aws secretsmanager get-secret-value --secret-id banking_system --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
 
+# Need to update the URI each time there is a new push to Main - since there is a new image on aws ecr
 awsECRlogin:
 	aws ecr get-login-password | docker login --username AWS --password-stdin 339712865282.dkr.ecr.ap-south-1.amazonaws.com
 
 dockerPullImageFromAwsECR:
-	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b4824577750950fd0fe25e35a4b66f4e632df54a
+	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:33cba6267f12756f4b009305d70beef754408767
 
 dockerRunImagePulledFromAwsECR:
-	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b4824577750950fd0fe25e35a4b66f4e632df54a
+	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:33cba6267f12756f4b009305d70beef754408767
 
 
 .PHONY: postgres createdb dropdb migrateUp migratedown migrateUp1 migratedown1 sqlc test server mock dockerImageBuild dockerImageRun dockerComposeUp dockerComposeDown migrateupAWS awsSecretsToappenv awsECRlogin dockerPullImageFromAwsECR dockerRunImagePulledFromAwsECR
