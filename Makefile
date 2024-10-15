@@ -47,7 +47,7 @@ dockerImageBuild:
 dockerImageRun:
 	docker run --name banking_system --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres17.0:5432/banking_system?sslmode=disable" banking_system:latest
 
-
+# Builds the api and database into one container locally - need to run the postgres database as well to make the db connection successful
 dockerComposeUp:
 	docker compose up
 
@@ -63,9 +63,12 @@ awsECRlogin:
 	aws ecr get-login-password | docker login --username AWS --password-stdin 339712865282.dkr.ecr.ap-south-1.amazonaws.com
 
 dockerPullImageFromAwsECR:
-	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:4d4c777b9ced0339a8924742fd0ec4c54ca26af7
+	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b4824577750950fd0fe25e35a4b66f4e632df54a
+
+dockerRunImagePulledFromAwsECR:
+	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b4824577750950fd0fe25e35a4b66f4e632df54a
 
 
-.PHONY: postgres createdb dropdb migrateUp migratedown migrateUp1 migratedown1 sqlc test server mock dockerImageBuild dockerImageRun dockerComposeUp dockerComposeDown migrateupAWS awsSecretsToappenv awsECRlogin dockerPullImageFromAwsECR
+.PHONY: postgres createdb dropdb migrateUp migratedown migrateUp1 migratedown1 sqlc test server mock dockerImageBuild dockerImageRun dockerComposeUp dockerComposeDown migrateupAWS awsSecretsToappenv awsECRlogin dockerPullImageFromAwsECR dockerRunImagePulledFromAwsECR
 
 # openssl rand -hex 64 | head -c 32 == To generate random 32 TOKEN_SYMMETRIC_KEY

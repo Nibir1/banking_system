@@ -5,7 +5,7 @@
 set -e
 
 echo "run db migration"
-source /app/app.env
+source /app/app.env # Remove this code when running locally
 /app/migrate -path /app/migration -database "$DB_SOURCE" -verbose up
 
 echo "start the app"
