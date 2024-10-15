@@ -43,4 +43,13 @@ dockerImageBuild:
 dockerImageRun:
 	docker run --name banking_system --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres17.0:5432/banking_system?sslmode=disable" banking_system:latest
 
-.PHONY: postgres createdb dropdb migrateUp migratedown migrateUp1 migratedown1 sqlc test server mock dockerImageBuild dockerImageRun
+
+dockerComposeUp:
+	docker compose up
+
+# To remove all existing containers and networks
+dockerComposeDown:
+	docker compose down
+
+
+.PHONY: postgres createdb dropdb migrateUp migratedown migrateUp1 migratedown1 sqlc test server mock dockerImageBuild dockerImageRun dockerComposeUp dockerComposeDown
