@@ -15,6 +15,8 @@ migrateup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose up
 migratedown:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose down
+
+#Remove "source /app/app.env" from start.sh when building locally
 dockerImageBuild:
 	docker build -t banking_system:latest .
 # we need to use the IPAddress of postgres17 after root:secret@"here". So we first create a network where we put the db so that we can use its IP
@@ -69,13 +71,13 @@ awsECRlogin:
 	aws ecr get-login-password | docker login --username AWS --password-stdin 339712865282.dkr.ecr.ap-south-1.amazonaws.com
 
 dockerPullImageFromAwsECR:
-	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b478141455a02e65e6cd375f7a41954792ce87eb
+	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:9b10812ec972e4b47ac3f6276f099aa416d239a6
 
 dockerRunPulledImageFromAwsECR:
-	docker run 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b478141455a02e65e6cd375f7a41954792ce87eb
+	docker run 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:9b10812ec972e4b47ac3f6276f099aa416d239a6
 
 dockerRunPulledImageFromAwsECRlocally:
-	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b478141455a02e65e6cd375f7a41954792ce87eb  
+	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:9b10812ec972e4b47ac3f6276f099aa416d239a6 
 # ------------------------ End
 
 # ------------------------ Start
