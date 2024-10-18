@@ -49,11 +49,6 @@ server:
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/nibir1/banking_system/db/sqlc Store
 
-# For Local Testing
-
-
-
-
 # Builds the api and database into one container locally - need to run the postgres database as well to make the db connection successful
 dockerComposeUp:
 	docker compose up
