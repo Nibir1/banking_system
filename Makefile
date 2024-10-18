@@ -61,7 +61,7 @@ dockerComposeDown:
 # aws configure = to configure aws cli to access our aws services
 # This command retrieves the secrets value from aws secret management and stores into app.env
 awsSecretsToappenv:
-    aws secretsmanager get-secret-value --secret-id banking_system --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
+	aws secretsmanager get-secret-value --secret-id banking_system --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
 
 # ------------------------ Start
 # Need to update the URI each time there is a new push to Main - since there is a new image on aws ecr
@@ -72,7 +72,10 @@ dockerPullImageFromAwsECR:
 	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b478141455a02e65e6cd375f7a41954792ce87eb
 
 dockerRunPulledImageFromAwsECR:
-	docker run 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b478141455a02e65e6cd375f7a41954792ce87eb 
+	docker run 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b478141455a02e65e6cd375f7a41954792ce87eb
+
+dockerRunPulledImageFromAwsECRlocally:
+	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b478141455a02e65e6cd375f7a41954792ce87eb  
 # ------------------------ End
 
 # ------------------------ Start
