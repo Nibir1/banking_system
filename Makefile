@@ -9,8 +9,22 @@ dropdb:
 
 # migrate create -ext sql -dir db/migration -seq add_users == For creating migration files
 
+# -------------------------
+# For Local Testing
 migrateup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose up
+migratedown:
+	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose down
+dockerImageBuild:
+	docker build -t banking_system:latest .
+# we need to use the IPAddress of postgres17 after root:secret@"here". So we first create a network where we put the db so that we can use its IP
+# docker network create bank-network 
+# docker network connect bank-network postgres17.0
+# docker network inspect bank-network 
+dockerImageRun:
+	docker run --name banking_system --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres17.0:5432/banking_system?sslmode=disable" banking_system:latest
+
+# -------------------------
 
 # migrate database to aws postgres - banking_system
 migrateupAWS:
@@ -19,8 +33,6 @@ migrateupAWS:
 migrateup1:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose up 1
 
-migratedown:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose down
 
 migratedown1:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose down 1
@@ -37,15 +49,10 @@ server:
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/nibir1/banking_system/db/sqlc Store
 
-dockerImageBuild:
-	docker build -t banking_system:latest .
+# For Local Testing
 
-# we need to use the IPAddress of postgres17 after root:secret@"here". So we first create a network where we put the db so that we can use its IP
-# docker network create bank-network 
-# docker network connect bank-network postgres17.0
-# docker network inspect bank-network 
-dockerImageRun:
-	docker run --name banking_system --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres17.0:5432/banking_system?sslmode=disable" banking_system:latest
+
+
 
 # Builds the api and database into one container locally - need to run the postgres database as well to make the db connection successful
 dockerComposeUp:
@@ -69,7 +76,18 @@ dockerPullImageFromAwsECR:
 dockerRunImagePulledFromAwsECR:
 	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:33cba6267f12756f4b009305d70beef754408767
 
+# kubectl cluster-info
+# To connect kubectl to aws eks cluster
+configawsEKS:
+	aws eks update-kubeconfig --name banking_system --region ap-south-1
 
-.PHONY: postgres createdb dropdb migrateUp migratedown migrateUp1 migratedown1 sqlc test server mock dockerImageBuild dockerImageRun dockerComposeUp dockerComposeDown migrateupAWS awsSecretsToappenv awsECRlogin dockerPullImageFromAwsECR dockerRunImagePulledFromAwsECR
+connectawsEKSCluster:
+	kubectl config use-context arn:aws:eks:ap-south-1:339712865282:cluster/banking_system
+
+# cat ~/.kube/config 
+# cat ~/.aws/credentials
+# kubectl cluster-info
+
+.PHONY: postgres createdb dropdb migrateUp migratedown migrateUp1 migratedown1 sqlc test server mock dockerImageBuild dockerImageRun dockerComposeUp dockerComposeDown migrateupAWS awsSecretsToappenv awsECRlogin dockerPullImageFromAwsECR dockerRunImagePulledFromAwsECR configawsEKS connectawsEKSCluster
 
 # openssl rand -hex 64 | head -c 32 == To generate random 32 TOKEN_SYMMETRIC_KEY
