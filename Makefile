@@ -9,7 +9,7 @@ dropdb:
 
 # migrate create -ext sql -dir db/migration -seq add_users == For creating migration files
 
-# -------------------------
+# ------------------------- Start
 # For Local Testing
 migrateup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose up
@@ -23,8 +23,7 @@ dockerImageBuild:
 # docker network inspect bank-network 
 dockerImageRun:
 	docker run --name banking_system --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres17.0:5432/banking_system?sslmode=disable" banking_system:latest
-
-# -------------------------
+# ------------------------- End
 
 # migrate database to aws postgres - banking_system
 # After creating database on aws RDS we need to migrate our database to it
@@ -33,7 +32,6 @@ migrateupAWS:
 
 migrateup1:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose up 1
-
 
 migratedown1:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose down 1
@@ -50,6 +48,7 @@ server:
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/nibir1/banking_system/db/sqlc Store
 
+# ------------------------ Start
 # Builds the api and database into one container locally - need to run the postgres database as well to make the db connection successful
 dockerComposeUp:
 	docker compose up
@@ -57,23 +56,28 @@ dockerComposeUp:
 # To remove all existing containers and networks
 dockerComposeDown:
 	docker compose down
-
+# ------------------------ End
 
 # aws configure = to configure aws cli to access our aws services
 # This command retrieves the secrets value from aws secret management and stores into app.env
 awsSecretsToappenv:
-	aws secretsmanager get-secret-value --secret-id banking_system --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
+    aws secretsmanager get-secret-value --secret-id banking_system --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
 
+# ------------------------ Start
 # Need to update the URI each time there is a new push to Main - since there is a new image on aws ecr
 awsECRlogin:
 	aws ecr get-login-password | docker login --username AWS --password-stdin 339712865282.dkr.ecr.ap-south-1.amazonaws.com
 
 dockerPullImageFromAwsECR:
-	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:33cba6267f12756f4b009305d70beef754408767
+	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b478141455a02e65e6cd375f7a41954792ce87eb
 
-dockerRunImagePulledFromAwsECR:
-	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:33cba6267f12756f4b009305d70beef754408767
+dockerRunPulledImageFromAwsECR:
+	docker run 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b478141455a02e65e6cd375f7a41954792ce87eb 
+# ------------------------ End
 
+# ------------------------ Start
+# cat ~/.kube/config 
+# cat ~/.aws/credentials
 # kubectl cluster-info
 # To connect kubectl to aws eks cluster
 configawsEKS:
@@ -81,11 +85,8 @@ configawsEKS:
 
 connectawsEKSCluster:
 	kubectl config use-context arn:aws:eks:ap-south-1:339712865282:cluster/banking_system
+# ------------------------ End
 
-# cat ~/.kube/config 
-# cat ~/.aws/credentials
-# kubectl cluster-info
-
-.PHONY: postgres createdb dropdb migrateUp migratedown migrateUp1 migratedown1 sqlc test server mock dockerImageBuild dockerImageRun dockerComposeUp dockerComposeDown migrateupAWS awsSecretsToappenv awsECRlogin dockerPullImageFromAwsECR dockerRunImagePulledFromAwsECR configawsEKS connectawsEKSCluster
+.PHONY: postgres createdb dropdb migrateUp migratedown migrateUp1 migratedown1 sqlc test server mock dockerImageBuild dockerImageRun dockerComposeUp dockerComposeDown migrateupAWS awsSecretsToappenv awsECRlogin dockerPullImageFromAwsECR dockerRunPulledImageFromAwsECR
 
 # openssl rand -hex 64 | head -c 32 == To generate random 32 TOKEN_SYMMETRIC_KEY
