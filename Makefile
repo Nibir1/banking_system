@@ -60,6 +60,7 @@ dockerComposeDown:
 	docker compose down
 # ------------------------ End
 
+# openssl rand -hex 64 | head -c 32 == To generate random 32 TOKEN_SYMMETRIC_KEY
 # aws configure = to configure aws cli to access our aws services
 # This command retrieves the secrets value from aws secret management and stores into app.env
 awsSecretsToappenv:
@@ -93,5 +94,3 @@ connectawsEKSCluster:
 # ------------------------ End
 
 .PHONY: postgres createdb dropdb migrateUp migratedown migrateUp1 migratedown1 sqlc test server mock dockerImageBuild dockerImageRun dockerComposeUp dockerComposeDown migrateupAWS awsSecretsToappenv awsECRlogin dockerPullImageFromAwsECR dockerRunPulledImageFromAwsECR
-
-# openssl rand -hex 64 | head -c 32 == To generate random 32 TOKEN_SYMMETRIC_KEY
