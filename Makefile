@@ -71,13 +71,14 @@ awsECRlogin:
 	aws ecr get-login-password | docker login --username AWS --password-stdin 339712865282.dkr.ecr.ap-south-1.amazonaws.com
 
 dockerPullImageFromAwsECR:
-	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b478141455a02e65e6cd375f7a41954792ce87eb
+	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:eb241d28cd2c8c098ef899cd1125678316ec706e
 
 dockerRunPulledImageFromAwsECR:
-	docker run 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b478141455a02e65e6cd375f7a41954792ce87eb
+	docker run 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:eb241d28cd2c8c098ef899cd1125678316ec706e
 
 dockerRunPulledImageFromAwsECRlocally:
-	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:b478141455a02e65e6cd375f7a41954792ce87eb  
+	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:eb241d28cd2c8c098ef899cd1125678316ec706e
+
 # ------------------------ End
 
 # ------------------------ Start
