@@ -15,6 +15,8 @@ migrateup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose up
 migratedown:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose down
+
+# Remove "source /app/app.env" from start.sh when running locally
 dockerImageBuild:
 	docker build -t banking_system:latest .
 # we need to use the IPAddress of postgres17 after root:secret@"here". So we first create a network where we put the db so that we can use its IP
