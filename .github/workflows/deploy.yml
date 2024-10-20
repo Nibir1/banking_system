@@ -20,7 +20,7 @@ jobs:
       - name: Install kubectl
         uses: azure/setup-kubectl@v4
         with:
-          version: 'v1.31.1' # default is latest stable
+          version: 'v1.21.3' # default is latest stable
         id: install
 
       - name: Configure AWS credentials
@@ -51,7 +51,6 @@ jobs:
 
       - name: Deploy image to Amazon EKS
         run: |
-          export AWS_PROFILE=default
           kubectl apply -f eks/aws-auth.yaml
           kubectl apply -f eks/deployment.yaml
           kubectl apply -f eks/service.yaml
