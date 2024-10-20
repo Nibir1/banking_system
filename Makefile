@@ -71,29 +71,33 @@ awsECRlogin:
 	aws ecr get-login-password | docker login --username AWS --password-stdin 339712865282.dkr.ecr.ap-south-1.amazonaws.com
 
 dockerPullImageFromAwsECR:
-	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:fa2fdf64d57f6949e2e8afc820f9108b65cfb713
+	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:58bd2384fd28086eed63a794c965692b4b6b4057
 
 dockerRunPulledImageFromAwsECR:
-	docker run 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:fa2fdf64d57f6949e2e8afc820f9108b65cfb713
+	docker run 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:58bd2384fd28086eed63a794c965692b4b6b4057
 
 dockerRunPulledImageFromAwsECRlocally:
-	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:fa2fdf64d57f6949e2e8afc820f9108b65cfb713
+	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:58bd2384fd28086eed63a794c965692b4b6b4057
 
 # ------------------------ End
 
 # ------------------------ Start
+# kubectl version --client
+# ls -l ~/.aws
 # cat ~/.kube/config 
 # cat ~/.aws/credentials
 # aws sts get-caller-identity
+# vi ~/.aws/credentials = To edit the credentials
 # kubectl cluster-info
-# kubectl apply -f eks/aws-auth.yaml
+# kubectl apply -f eks/aws-auth.yaml --> make sure your in the default profile when executing this
 # kubectl get service
 # kubectl get pods
+# use k9s for better kubernetes cluster usage
 # kubectl apply -f eks/deployment.yaml
-# To connect kubectl to aws eks cluster
 configawsEKS:
 	aws eks update-kubeconfig --name banking_system --region ap-south-1
 
+# To connect kubectl to aws eks cluster
 connectawsEKSCluster:
 	kubectl config use-context arn:aws:eks:ap-south-1:339712865282:cluster/banking_system
 # ------------------------ End
