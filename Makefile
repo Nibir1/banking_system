@@ -89,6 +89,7 @@ dockerRunPulledImageFromAwsECRlocally:
 # aws sts get-caller-identity
 # vi ~/.aws/credentials = To edit the credentials
 # kubectl cluster-info
+# export AWS_PROFILE=default
 # kubectl apply -f eks/aws-auth.yaml --> make sure your in the default profile when executing this
 # kubectl get service
 # kubectl get pods

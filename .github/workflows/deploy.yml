@@ -51,7 +51,7 @@ jobs:
 
       - name: Deploy image to Amazon EKS
         run: |
-          aws EXPORT_PROFILE=default
+          export AWS_PROFILE=github
           kubectl apply -f eks/aws-auth.yaml
           kubectl apply -f eks/deployment.yaml
           kubectl apply -f eks/service.yaml
