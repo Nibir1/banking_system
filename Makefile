@@ -30,7 +30,7 @@ dockerImageRun:
 # migrate database to aws postgres - banking_system
 # After creating database on aws RDS we need to migrate our database to it
 migrateupAWS:
-	migrate -path db/migration -database "postgresql://root:OmHiiaKco2zomi5F2FWK@banking-system-id.c92a8wwkqopk.ap-south-1.rds.amazonaws.com:5432/banking_system" -verbose up
+	migrate -path db/migration -database "postgresql://root:pjzo1nxUNsCYum4qyxUR@banking-system-id.c92a8wwkqopk.ap-south-1.rds.amazonaws.com/banking_system" -verbose up
 
 migrateup1:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/banking_system?sslmode=disable" -verbose up 1
@@ -71,20 +71,25 @@ awsECRlogin:
 	aws ecr get-login-password | docker login --username AWS --password-stdin 339712865282.dkr.ecr.ap-south-1.amazonaws.com
 
 dockerPullImageFromAwsECR:
-	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:eb241d28cd2c8c098ef899cd1125678316ec706e
+	docker pull 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:fa2fdf64d57f6949e2e8afc820f9108b65cfb713
 
 dockerRunPulledImageFromAwsECR:
-	docker run 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:eb241d28cd2c8c098ef899cd1125678316ec706e
+	docker run 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:fa2fdf64d57f6949e2e8afc820f9108b65cfb713
 
 dockerRunPulledImageFromAwsECRlocally:
-	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:eb241d28cd2c8c098ef899cd1125678316ec706e
+	docker run -p 8080:8080 339712865282.dkr.ecr.ap-south-1.amazonaws.com/banking_system:fa2fdf64d57f6949e2e8afc820f9108b65cfb713
 
 # ------------------------ End
 
 # ------------------------ Start
 # cat ~/.kube/config 
 # cat ~/.aws/credentials
+# aws sts get-caller-identity
 # kubectl cluster-info
+# kubectl apply -f eks/aws-auth.yaml
+# kubectl get service
+# kubectl get pods
+# kubectl apply -f eks/deployment.yaml
 # To connect kubectl to aws eks cluster
 configawsEKS:
 	aws eks update-kubeconfig --name banking_system --region ap-south-1
