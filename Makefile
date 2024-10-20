@@ -7,7 +7,7 @@ createdb:
 dropdb: 
 	docker exec -it postgres17.0 dropdb banking_systems
 
-# migrate create -ext sql -dir db/migration -seq add_users == For creating migration files
+# migrate create -ext sql -dir db/migration -seq add_users == For creating migration files for db migration
 
 # ------------------------- Start
 # For Local Testing
