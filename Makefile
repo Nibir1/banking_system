@@ -66,7 +66,7 @@ awsSecretsToappenv:
 	aws secretsmanager get-secret-value --secret-id banking_system --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
 
 # ------------------------ Start
-# Need to update the URI each time there is a new push to Main - since there is a new image on aws ecr
+# Need to update the URI each time there is a new push to Main - since there is a new image on aws ecr - also in eks-> deployment.yaml
 awsECRlogin:
 	aws ecr get-login-password | docker login --username AWS --password-stdin 339712865282.dkr.ecr.ap-south-1.amazonaws.com
 
@@ -94,6 +94,7 @@ dockerRunPulledImageFromAwsECRlocally:
 # kubectl get pods
 # use k9s for better kubernetes cluster usage
 # kubectl apply -f eks/deployment.yaml
+# kubectl apply -f eks/service.yaml
 configawsEKS:
 	aws eks update-kubeconfig --name banking_system --region ap-south-1
 
