@@ -1,12 +1,12 @@
 package api
 
 import (
-	"database/sql" // Import for interacting with a database
-	"errors"       // Import for handling errors
-	"net/http"     // Import for working with HTTP requests and responses
+	"database/sql"
+	"errors"   // Import for handling errors
+	"net/http" // Import for working with HTTP requests and responses
 
-	"github.com/gin-gonic/gin"                    // Import for using the Gin web framework
-	"github.com/lib/pq"                           // Import for handling PostgreSQL-specific errors (optional, if applicable)
+	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"                           // Import for handling PostgreSQL-specific errors
 	db "github.com/nibir1/banking_system/db/sqlc" // Import for interacting with the database using sqlc-generated functions
 	"github.com/nibir1/banking_system/token"      // Import for handling authentication tokens
 )

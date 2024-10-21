@@ -21,11 +21,15 @@ func addAuthorization(
 	username string,
 	duration time.Duration,
 ) {
+	// Create a new token using the provided token maker, username, and duration.
 	token, payload, err := tokenMaker.CreateToken(username, duration)
-	require.NoError(t, err)
-	require.NotEmpty(t, payload)
+	require.NoError(t, err)      // Ensure no errors occurred during token creation.
+	require.NotEmpty(t, payload) // Verify that the payload is not empty.
 
+	// Format the authorization header using the provided authorization type and token.
 	authorizationHeader := fmt.Sprintf("%s %s", authorizationType, token)
+
+	// Set the authorization header in the request's headers.
 	request.Header.Set(authorizationHeaderKey, authorizationHeader)
 }
 
@@ -83,10 +87,13 @@ func TestAuthMiddleware(t *testing.T) {
 		},
 	}
 
+	// Looping Through Test Cases
 	for i := range testCases {
 		tc := testCases[i]
 
+		// Running Each Test Case
 		t.Run(tc.name, func(t *testing.T) {
+			// Setting Up Server
 			server := newTestServer(t, nil)
 			authPath := "/auth"
 			server.router.GET(
@@ -97,11 +104,15 @@ func TestAuthMiddleware(t *testing.T) {
 				},
 			)
 
+			// Creating Request
 			recorder := httptest.NewRecorder()
 			request, err := http.NewRequest(http.MethodGet, authPath, nil)
 			require.NoError(t, err)
 
+			// Setting Up Authorization for Test Case
 			tc.setupAuth(t, request, server.tokenMaker)
+
+			// Sending Request and Checking Response
 			server.router.ServeHTTP(recorder, request)
 			tc.checkResponse(t, recorder)
 		})
